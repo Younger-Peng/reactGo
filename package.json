@@ -1,0 +1,21 @@
+{
+  "name": "reactGo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pc": "proxychains4 -f ~/.proxychains.conf",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Younger-Peng/reactGo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Younger-Peng/reactGo/issues"
+  },
+  "homepage": "https://github.com/Younger-Peng/reactGo#readme"
+}
