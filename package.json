@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pc": "proxychains4 -f ~/.proxychains.conf",
+    "pc": "proxychains4 -f ~/.proxychains.conf"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Younger-Peng/reactGo/issues"
   },
-  "homepage": "https://github.com/Younger-Peng/reactGo#readme"
+  "homepage": "https://github.com/Younger-Peng/reactGo#readme",
+  "dependencies": {
+    "express": "4.10.2"
+  }
 }
