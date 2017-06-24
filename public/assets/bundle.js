@@ -19043,7 +19043,8 @@
 
 	var React = __webpack_require__(1)
 	var Actions = __webpack_require__(150)
-	var Statistics = __webpack_require__(151)
+	var TopicTextInput = __webpack_require__(151)
+	var Statistics = __webpack_require__(152)
 
 
 	var Header = React.createClass({displayName: "Header",
@@ -19052,11 +19053,17 @@
 	      React.createElement("header", {id: "header"}, 
 	        React.createElement("h1", null, "Trending Topics"), 
 	        React.createElement("h2", null, "Top Topics"), 
-	        React.createElement(Statistics, {topTopic: "test", topStat: "90"})
-	        
+	        React.createElement(Statistics, {topTopic: "test", topStat: "90"}), 
+	        React.createElement(TopicTextInput, {
+	          id: "new-topic", 
+	          placeholder: "What is your concern?", 
+	          onSave: this._onSave})
 
 	      )
 	    )
+	  },
+	  _onSave: function(){
+	    console.log('header saved')
 	  }
 	})
 
@@ -19070,6 +19077,60 @@
 
 /***/ }),
 /* 151 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+
+	var ENTER_KEY_CODE = 13
+
+	var TopicTextInput = React.createClass({displayName: "TopicTextInput",
+	  propTypes: {
+	    className: ReactPropTypes.string,
+	    id: ReactPropTypes.string,
+	    placeholder: ReactPropTypes.string,
+	    onSave: ReactPropTypes.func.isRequired,
+	    value: ReactPropTypes.string
+	  },
+	  getInitialState: function(){
+	    return {
+	      value: this.props.value || ''
+	    }
+	  },
+	  render: function(){
+	    return (
+	      React.createElement("input", {
+	        className: this.props.className, 
+	        id: this.props.id, 
+	        placeholder: this.props.placeholder, 
+	        onBlur: this._save, 
+	        onChange: this._onChange, 
+	        onKeyDown: this._onKeyDown, 
+	        value: this.state.value, 
+	        autoFocus: true})
+	    )
+	  },
+	  _save: function(){
+	    this.props.onSave(this.state.value)
+	    this.setState({
+	      value: ''
+	    })
+	  },
+	  _onChange: function(event){
+	    this.setState({
+	      value: event.target.value
+	    })
+	  },
+	  _onKeyDown: function(event){
+	    console.log('keydown')
+	  },
+
+	})
+
+	module.exports = TopicTextInput
+
+/***/ }),
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1)
