@@ -1,18 +1,8 @@
 var React = require('react')
 
-var Application = React.createClass({
-  render: function(){
-    return (
-      <div className="main-content">
-        <h1>Hello World!</h1>
-        <p>{this.props.message}</p>
-      </div>
-      
-    )
-  }
-})
+var Application = require('./components/App.react')
 
 React.render(
-  <Application message="Welcome to planet earth" />,
+  <Application message="Welcome to planet Bumi" />,
   document.getElementById('app')
 )

@@ -9,3 +9,5 @@ var TopicCountItem = React.createClass({
     )
   }
 })
+
+module.exports = TopicCountItem

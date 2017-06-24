@@ -46,21 +46,11 @@
 
 	var React = __webpack_require__(1)
 
-	var Application = React.createClass({displayName: "Application",
-	  render: function(){
-	    return (
-	      React.createElement("div", {className: "main-content"}, 
-	        React.createElement("h1", null, "Hello World!"), 
-	        React.createElement("p", null, this.props.message)
-	      )
-	      
-	    )
-	  }
-	})
+	var Application = __webpack_require__(148)
 
 	React.render(
-	  React.createElement(Application, {message: "Welcome to planet earth"}),
-	  document.getElementById('content')
+	  React.createElement(Application, {message: "Welcome to planet Bumi"}),
+	  document.getElementById('app')
 	)
 
 /***/ }),
@@ -19007,6 +18997,95 @@
 	module.exports = onlyChild;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ }),
+/* 148 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/*
+	This component operates as a 'Controller View'.It listens for changes in the store and pass the new Data 
+	to its children
+
+	React provides the kind of composable views we need for view layer.Close to the top of the nested
+	view hierarchy, a special kind of view listens for events that are broadcast by the store that it
+	depends on.One could call this a controller-view.As it provides the glue code to get data from the
+	stores and to pass this data down the chain of its desendants.We might have one of these controller
+	views governing any significant section of the page.
+
+	When it receives an event from the store, it first requires the new data via the store's public getter
+	methods.It then calls its own setState() or force update() methods, causing its own render method and 
+	the render method of all its desendants to run.
+
+	We often pass the entire state of the store down the chain of views in a single object,allowing diffent
+	desendants to use what they need.In addtion to keeping the controller-like behavior at the top of the 
+	hierarchy, and thus keeping our desendants. 
+	*/
+
+	var React = __webpack_require__(1)
+
+	var Header = __webpack_require__(149)
+
+	var App = React.createClass({displayName: "App",
+	  render: function(){
+	    return (
+	      React.createElement("div", null, 
+	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"})
+	      )
+	    )
+	  }
+	})
+
+	module.exports = App
+
+/***/ }),
+/* 149 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var Actions = __webpack_require__(150)
+	var Statistics = __webpack_require__(151)
+
+
+	var Header = React.createClass({displayName: "Header",
+	  render: function(){
+	    return (
+	      React.createElement("header", {id: "header"}, 
+	        React.createElement("h1", null, "Trending Topics"), 
+	        React.createElement("h2", null, "Top Topics"), 
+	        React.createElement(Statistics, {topTopic: "test", topStat: "90"})
+	        
+
+	      )
+	    )
+	  }
+	})
+
+	module.exports = Header
+
+/***/ }),
+/* 150 */
+/***/ (function(module, exports) {
+
+	
+
+/***/ }),
+/* 151 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+
+	var Statistics = React.createClass({displayName: "Statistics",
+	  render: function(){
+	    return (
+	      React.createElement("div", null, 
+	        React.createElement("span", null, this.props.topTopic), 
+	        React.createElement("span", null, this.props.topStat + '%')
+	      )
+	    )
+	  }
+	})
+
+	module.exports = Statistics
 
 /***/ })
 /******/ ]);
