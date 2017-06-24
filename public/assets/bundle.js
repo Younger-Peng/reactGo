@@ -19028,6 +19028,7 @@
 	var Store = __webpack_require__(155)
 
 	function getState(){
+	  //每次运行此函数都会得到store里面最新的数据
 	  return {
 	    allTopics: Store.getAll(),
 	    topTopics: Store.getTopTopic()
@@ -19054,6 +19055,8 @@
 	    )
 	  },
 	  _onChange: function(){
+	    //在AppDispatcher中，每次action之后会更改store里面的数据，之后会调用store.emitChange方法
+	    //然后emit
 	    this.setState(
 	      getState()
 	    )
@@ -19270,6 +19273,10 @@
 	        React.createElement("ul", null, topListItems)
 	      )
 	    )
+	  },
+	  //不知道这行代码是什么意思，目前还没添加到AppDispatcher里
+	  onClearCompletedClick: function(){
+	    Actions.destroyCompleted()
 	  }
 	})
 
@@ -19311,6 +19318,7 @@
 	  },
 	  _onToggleCompleteAll: function(){
 	    console.log('toggleCompleteAll')
+	    Actions.toggleCompleteAll()
 	  }
 	})
 
@@ -19343,6 +19351,9 @@
 	}
 	function destroy(id){
 	  delete _topics[id]
+	}
+	function updateText(id, text){
+	  _topics[id].text = text
 	}
 
 
@@ -19399,6 +19410,10 @@
 	    
 	    case Constants.TOPIC_DESTROY:
 	      destroy(action.id)
+	      break;
+
+	    case Constants.TODO_UPDATE_TEXT:
+	      updateText(action.id, action.text)
 	      break;
 
 	    default: 
@@ -26975,7 +26990,8 @@
 	  TOPIC_CREATE: null,
 	  TODO_COMPLETE: null,
 	  TOPIC_INCREMENT: null,
-	  TOPIC_DECREMENT: null
+	  TOPIC_DECREMENT: null,
+	  TODO_UPDATE_TEXT: null
 	})
 
 
@@ -27354,19 +27370,48 @@
 	var React = __webpack_require__(1)
 	var ReactPropTypes = React.PropTypes
 	var Actions = __webpack_require__(150)
+	var TopicTextInput = __webpack_require__(151)
+	var cx = __webpack_require__(168)
 
 	var TopicItem = React.createClass({displayName: "TopicItem",
-
+	  propTypes: {
+	    topic: ReactPropTypes.object.isRequired
+	  },
+	  getInitialState: function(){
+	    return {
+	      isEditing: false
+	    }
+	  },
 	  render: function(){
 	    var topic = this.props.topic
+	    var input
+	    if(this.state.isEditing){
+	      input = 
+	      React.createElement(TopicTextInput, {
+	        className: "edit", 
+	        onSave: this._onSave, 
+	        value: topic.text}
+	       )
+	    }
+
 	    return (
-	      React.createElement("li", {className: "view"}, 
-	        React.createElement("label", null, topic.text), 
-	        React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
-	        React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
-	        React.createElement("button", {className: "destroy", onClick: this._onDestroy}, "delete")
+	      React.createElement("li", {className: cx({
+	        'editing': this.state.isEditing
+	      }), key: topic.id}, 
+	        React.createElement("div", {className: "view"}, 
+	          React.createElement("label", {onDoubleClick: this._onDoubleClick}, topic.text), 
+	          React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
+	          React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
+	          React.createElement("button", {className: "destroy", onClick: this._onDestroy}, "delete")
+	        ), 
+	        input
 	      )
 	    )
+	  },
+	  _onDoubleClick: function(){
+	    this.setState({
+	      isEditing: true
+	    })
 	  },
 	  _onIncrement: function(){
 	    console.log(this.props.topic)
@@ -27377,6 +27422,15 @@
 	  },
 	  _onDestroy: function(){
 	    Actions.destroy(this.props.topic.id)
+	  },
+	  _onToggleComplete: function(){
+	    Actions.toggleComplete(this.props.topic)
+	  },
+	  _onSave: function(text){
+	    Actions.updateText(this.props.topic.id, text)
+	    this.setState({
+	      isEditing: false
+	    })
 	  }
 	})
 
@@ -27400,6 +27454,49 @@
 	})
 
 	module.exports = TopicCountItem
+
+/***/ }),
+/* 168 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule cx
+	 */
+
+	/**
+	 * This function is used to mark string literals representing CSS class names
+	 * so that they can be transformed statically. This allows for modularization
+	 * and minification of CSS class names.
+	 *
+	 * In static_upstream, this function is actually implemented, but it should
+	 * eventually be replaced with something more descriptive, and the transform
+	 * that is used in the main stack should be ported for use elsewhere.
+	 *
+	 * @param string|object className to modularize, or an object of key/values.
+	 *                      In the object case, the values are conditions that
+	 *                      determine if the className keys should be included.
+	 * @param [string ...]  Variable list of classNames in the string case.
+	 * @return string       Renderable space-separated CSS className.
+	 */
+	function cx(classNames) {
+	  if (typeof classNames == 'object') {
+	    return Object.keys(classNames).filter(function(className) {
+	      return classNames[className];
+	    }).join(' ');
+	  } else {
+	    return Array.prototype.join.call(arguments, ' ');
+	  }
+	}
+
+	module.exports = cx;
+
 
 /***/ })
 /******/ ]);

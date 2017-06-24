@@ -30,6 +30,7 @@ var MainSection = React.createClass({
   },
   _onToggleCompleteAll: function(){
     console.log('toggleCompleteAll')
+    Actions.toggleCompleteAll()
   }
 })
 

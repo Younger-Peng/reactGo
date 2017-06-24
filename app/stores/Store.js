@@ -22,6 +22,9 @@ function updateCount(id, num){
 function destroy(id){
   delete _topics[id]
 }
+function updateText(id, text){
+  _topics[id].text = text
+}
 
 
 
@@ -77,6 +80,10 @@ AppDispatcher.register(function(payload){
     
     case Constants.TOPIC_DESTROY:
       destroy(action.id)
+      break;
+
+    case Constants.TODO_UPDATE_TEXT:
+      updateText(action.id, action.text)
       break;
 
     default: 

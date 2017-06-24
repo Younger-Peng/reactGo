@@ -25,6 +25,7 @@ var MainSection = require('./MainSection.react')
 var Store = require('../stores/store')
 
 function getState(){
+  //每次运行此函数都会得到store里面最新的数据
   return {
     allTopics: Store.getAll(),
     topTopics: Store.getTopTopic()
@@ -51,6 +52,8 @@ var App = React.createClass({
     )
   },
   _onChange: function(){
+    //在AppDispatcher中，每次action之后会更改store里面的数据，之后会调用store.emitChange方法
+    //然后emit
     this.setState(
       getState()
     )

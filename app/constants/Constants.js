@@ -4,6 +4,7 @@ module.exports = keymirror({
   TOPIC_CREATE: null,
   TODO_COMPLETE: null,
   TOPIC_INCREMENT: null,
-  TOPIC_DECREMENT: null
+  TOPIC_DECREMENT: null,
+  TODO_UPDATE_TEXT: null
 })
 

@@ -20,6 +20,10 @@ var SideSection = React.createClass({
         <ul>{topListItems}</ul>
       </div>
     )
+  },
+  //不知道这行代码是什么意思，目前还没添加到AppDispatcher里
+  onClearCompletedClick: function(){
+    Actions.destroyCompleted()
   }
 })
 
