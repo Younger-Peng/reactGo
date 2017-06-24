@@ -9,6 +9,13 @@ var Actions = {
       actionType: Constants.TOPIC_CREATE,
       text: text
     })
+  },
+  increment: function(id, text){
+    AppDispatcher.handleViewAction({
+      actionType: Constants.TOPIC_INCREMENT,
+      id: id,
+      text: text
+    })
   }
 }
 

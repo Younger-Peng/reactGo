@@ -3,8 +3,10 @@ var assign = require('object-assign')
 var EventEmitter = require('events').EventEmitter;
 var AppDispatcher = require('../dispatcher/AppDispatcher')
 var Constants = require('../constants/Constants')
+
 var _topics = {}
 var CHANGE_EVENT = 'change'
+
 function create(text){
   console.log('created text')
   var id = Date.now()
@@ -13,6 +15,9 @@ function create(text){
     count: 1,
     text: text
   }
+}
+function updateCount(id, num){
+  _topics[id]['count'] += num
 }
 var Store = assign({}, EventEmitter.prototype, {
   getAll: function(){
@@ -55,7 +60,7 @@ AppDispatcher.register(function(payload){
         create(text)
       }
       break;
-    case Constants.TOPIC_CREATE:
+    case Constants.TOPIC_INCREMENT:
       updateCount(action.id, 1);
       break;
 

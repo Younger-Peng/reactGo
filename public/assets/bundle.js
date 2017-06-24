@@ -19115,6 +19115,13 @@
 	      actionType: Constants.TOPIC_CREATE,
 	      text: text
 	    })
+	  },
+	  increment: function(id, text){
+	    AppDispatcher.handleViewAction({
+	      actionType: Constants.TOPIC_INCREMENT,
+	      id: id,
+	      text: text
+	    })
 	  }
 	}
 
@@ -19277,8 +19284,10 @@
 	var EventEmitter = __webpack_require__(159).EventEmitter;
 	var AppDispatcher = __webpack_require__(160)
 	var Constants = __webpack_require__(161)
+
 	var _topics = {}
 	var CHANGE_EVENT = 'change'
+
 	function create(text){
 	  console.log('created text')
 	  var id = Date.now()
@@ -19287,6 +19296,9 @@
 	    count: 1,
 	    text: text
 	  }
+	}
+	function updateCount(id, num){
+	  _topics[id]['count'] += num
 	}
 	var Store = assign({}, EventEmitter.prototype, {
 	  getAll: function(){
@@ -19329,7 +19341,7 @@
 	        create(text)
 	      }
 	      break;
-	    case Constants.TOPIC_CREATE:
+	    case Constants.TOPIC_INCREMENT:
 	      updateCount(action.id, 1);
 	      break;
 
@@ -26889,6 +26901,7 @@
 	var Dispatcher = __webpack_require__(163).Dispatcher;
 	var assign  = __webpack_require__(158);
 
+	// add a new method to Dispatcher,because there is a source to add .
 	var AppDispatcher = assign(new Dispatcher(), {
 	  handleViewAction: function(action){
 	    this.dispatch({
@@ -27288,7 +27301,7 @@
 
 	var React = __webpack_require__(1)
 	var ReactPropTypes = React.PropTypes
-
+	var Actions = __webpack_require__(150)
 
 	var TopicItem = React.createClass({displayName: "TopicItem",
 
@@ -27297,11 +27310,21 @@
 	    return (
 	      React.createElement("li", {className: "view"}, 
 	        React.createElement("label", null, topic.text), 
-	        React.createElement("button", null, "+"), 
-	        React.createElement("button", null, "-"), 
-	        React.createElement("button", null, "delete")
+	        React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
+	        React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
+	        React.createElement("button", {className: "destroy", onClick: this._onDestroy}, "delete")
 	      )
 	    )
+	  },
+	  _onIncrement: function(){
+	    console.log(this.props.topic)
+	    Actions.increment(this.props.topic.id, this.props.topic.text)
+	  },
+	  _onDecrement: function(){
+	    console.log('decrement')
+	  },
+	  _onDestroy: function(){
+	    console.log('destroy')
 	  }
 	})
 
