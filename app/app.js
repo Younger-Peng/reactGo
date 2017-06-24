@@ -14,5 +14,5 @@ var Application = React.createClass({
 
 React.render(
   <Application message="Welcome to planet earth" />,
-  document.getElementById('content')
+  document.getElementById('app')
 )
