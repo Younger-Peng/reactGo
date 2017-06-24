@@ -16,6 +16,13 @@ var Actions = {
       id: id,
       text: text
     })
+  },
+  decrement: function(id, text){
+    AppDispatcher.handleViewAction({
+      actionType: Constants.TOPIC_DECREMENT,
+      id,
+      text
+    })
   }
 }
 

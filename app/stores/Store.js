@@ -11,9 +11,9 @@ function create(text){
   console.log('created text')
   var id = Date.now()
   _topics[id] = {
-    id: id,
+    id,
     count: 1,
-    text: text
+    text
   }
 }
 function updateCount(id, num){
