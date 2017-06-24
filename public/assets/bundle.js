@@ -19023,13 +19023,15 @@
 
 	var React = __webpack_require__(1)
 
+	var SideSection = __webpack_require__(153)
 	var Header = __webpack_require__(149)
 
 	var App = React.createClass({displayName: "App",
 	  render: function(){
 	    return (
 	      React.createElement("div", null, 
-	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"})
+	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"}), 
+	        React.createElement(SideSection, null)
 	      )
 	    )
 	  }
@@ -19147,6 +19149,31 @@
 	})
 
 	module.exports = Statistics
+
+/***/ }),
+/* 153 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+
+
+	var SideSection = React.createClass({displayName: "SideSection",
+	  render: function(){
+	    return (
+	      React.createElement("div", null, 
+	        React.createElement("h3", null, "Votes"), 
+	        React.createElement("ul", null, 
+	          React.createElement("li", null, "1"), 
+	          React.createElement("li", null, "2"), 
+	          React.createElement("li", null, "3")
+	        )
+	      )
+	    )
+	  }
+	})
+
+	module.exports = SideSection
 
 /***/ })
 /******/ ]);

@@ -19,6 +19,7 @@ hierarchy, and thus keeping our desendants.
 
 var React = require('react')
 
+var SideSection = require('./SideSection.react')
 var Header = require('./Header.react')
 
 var App = React.createClass({
@@ -26,6 +27,7 @@ var App = React.createClass({
     return (
       <div>
         <Header topTopic="topTopic_" topStatic="50" />
+        <SideSection />
       </div>
     )
   }
