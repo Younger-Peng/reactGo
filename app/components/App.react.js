@@ -48,7 +48,7 @@ var App = React.createClass({
     return (
       <div>
         <Header topTopic="topTopic_" topStatic="50" />
-        <SideSection />
+        <SideSection allTopics={this.state.allTopics} />
         <MainSection allTopics={this.state.allTopics}/>
       </div>
     )
@@ -57,7 +57,6 @@ var App = React.createClass({
     this.setState(
       getState()
     )
-    console.log('onchange!')
   }
 })
 

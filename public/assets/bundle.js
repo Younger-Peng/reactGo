@@ -45,7 +45,6 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1)
-
 	var Application = __webpack_require__(148)
 
 	React.render(
@@ -19052,7 +19051,7 @@
 	    return (
 	      React.createElement("div", null, 
 	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"}), 
-	        React.createElement(SideSection, null), 
+	        React.createElement(SideSection, {allTopics: this.state.allTopics}), 
 	        React.createElement(MainSection, {allTopics: this.state.allTopics})
 	      )
 	    )
@@ -19061,7 +19060,6 @@
 	    this.setState(
 	      getState()
 	    )
-	    console.log('onchange!')
 	  }
 	})
 
@@ -19204,18 +19202,24 @@
 
 	var React = __webpack_require__(1)
 	var ReactPropTypes = React.PropTypes
-
+	var Actions = __webpack_require__(150)
+	var TopicCountItem = __webpack_require__(167)
+	var _ = __webpack_require__(156)
 
 	var SideSection = React.createClass({displayName: "SideSection",
+	  PropTypes: {
+	    allTopics: ReactPropTypes.object.isRequired
+	  },
 	  render: function(){
+	    var allTopics = this.props.allTopics
+	    var topListItems = []
+	    _.forEach(allTopics, function(topic) {
+	      topListItems.push(React.createElement(TopicCountItem, {title: topic.text, count: topic.count}))
+	    })
 	    return (
 	      React.createElement("div", {id: "sideSection"}, 
 	        React.createElement("h3", null, "Votes"), 
-	        React.createElement("ul", null, 
-	          React.createElement("li", null, "1"), 
-	          React.createElement("li", null, "2"), 
-	          React.createElement("li", null, "3")
-	        )
+	        React.createElement("ul", null, topListItems)
 	      )
 	    )
 	  }
@@ -27302,6 +27306,25 @@
 	})
 
 	module.exports = TopicItem
+
+/***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+
+	var TopicCountItem = React.createClass({displayName: "TopicCountItem",
+	  render: function(){
+	    return (
+	      React.createElement("li", null, 
+	        React.createElement("span", null, this.props.title), 
+	        React.createElement("span", null, this.props.count)
+	      )
+	    )
+	  }
+	})
+
+	module.exports = TopicCountItem
 
 /***/ })
 /******/ ]);

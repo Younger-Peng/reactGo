@@ -1,4 +1,5 @@
 var React = require('react')
+
 var TopicCountItem = React.createClass({
   render: function(){
     return (

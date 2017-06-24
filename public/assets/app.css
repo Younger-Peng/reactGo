@@ -27,13 +27,13 @@ html,body {
   text-align: center;
 }
 #sideSection {
-  float: left;
+  float: right;
   width: 500px;
   min-height: 300px;
   background: green;
 }
 #main {
-  float: right;
+  float: left;
   width: 500px;
   min-height: 300px;
   background: yellow;
