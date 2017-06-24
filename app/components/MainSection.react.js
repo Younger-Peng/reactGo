@@ -1,8 +1,22 @@
 var React = require('react')
 var ReactPropTypes = React.PropTypes
+var TopicItem = require('./TopicItem.react')
 
 var MainSection = React.createClass({
+  propTypes: {
+    allTopics: ReactPropTypes.object.isRequired
+  },
   render: function(){
+    var keys = Object.keys(this.props.allTopics)
+    if(keys.length < 1){
+      console.log(keys)
+      return null
+    }
+    var allTopics = this.props.allTopics;
+    var topics = [];
+    for(var key in allTopics){
+      topics.push(<TopicItem key={key} topic={allTopics[key]}/>)
+    }
     return (
       <section id="main">
         <input
@@ -10,11 +24,7 @@ var MainSection = React.createClass({
           type="checkbox"
           onChange={this._onToggleCompleteAll}/>
         <label htmlFor="toggle-all">Toggle order</label>
-        <ul>
-          <li>1</li>
-          <li>2</li>
-          <li>3</li>
-        </ul>
+        <ul id="todo-list">{topics}</ul>
       </section>
     )
   },

@@ -1,9 +1,19 @@
 var _ = require('lodash')
 var assign = require('object-assign')
 var EventEmitter = require('events').EventEmitter;
-
-
+var AppDispatcher = require('../dispatcher/AppDispatcher')
+var Constants = require('../constants/Constants')
 var _topics = {}
+var CHANGE_EVENT = 'change'
+function create(text){
+  console.log('created text')
+  var id = Date.now()
+  _topics[id] = {
+    id: id,
+    count: 1,
+    text: text
+  }
+}
 var Store = assign({}, EventEmitter.prototype, {
   getAll: function(){
     return _topics
@@ -21,37 +31,46 @@ var Store = assign({}, EventEmitter.prototype, {
     stat = isNaN(topTopic.count/sum) ? 0 : topTopic.count/sum * 100;
 
     return assign({}, topTopic, {'stat': stat});
+  },
+  emitChange: function(){
+    this.emit(CHANGE_EVENT)
+  },
+  addChangeListener: function(callback){
+    this.on(CHANGE_EVENT, callback)
+  },
+  removeChangeListener: function(callback){
+    this.removeListener(CHANGE_EVENT, callback)
   }
 })
 
 
-// AppDispatcher.register(function(payload){
-//   var action = payload.action;
-//   var text
+AppDispatcher.register(function(payload){
+  var action = payload.action;
+  var text
 
-//   switch(action.actionType){
-//     case Constants.TOPIC_CREATE:
-//       text = action.text.trim();
-//       if(text !== ''){
-//         create(text)
-//       }
-//       break;
-//     case Constants.TOPIC_CREATE:
-//       updateCount(action.id, 1);
-//       break;
+  switch(action.actionType){
+    case Constants.TOPIC_CREATE:
+      text = action.text.trim();
+      if(text !== ''){
+        create(text)
+      }
+      break;
+    case Constants.TOPIC_CREATE:
+      updateCount(action.id, 1);
+      break;
 
-//     case Constants.TOPIC_DECREMENT:
-//       updateCount(action.id, -1)
-//       break;
+    case Constants.TOPIC_DECREMENT:
+      updateCount(action.id, -1)
+      break;
 
-//     default: 
-//       return true
-//   }
+    default: 
+      return true
+  }
 
-//   Store.emitChange()
+  Store.emitChange()
 
-//   return true
-// })
+  return true
+})
 
 module.exports = Store
 

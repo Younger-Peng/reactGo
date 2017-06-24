@@ -19,8 +19,11 @@ var Header = React.createClass({
       </header>
     )
   },
-  _onSave: function(value){
-    console.log(value)
+  _onSave: function(text){
+    console.log(text)
+    if(text.trim()){
+      Actions.create(text)
+    }
   }
 })
 
