@@ -5,7 +5,7 @@ var ReactPropTypes = React.PropTypes
 var SideSection = React.createClass({
   render: function(){
     return (
-      <div>
+      <div id="sideSection">
         <h3>Votes</h3>
         <ul>
           <li>1</li>

@@ -19162,7 +19162,7 @@
 	var SideSection = React.createClass({displayName: "SideSection",
 	  render: function(){
 	    return (
-	      React.createElement("div", null, 
+	      React.createElement("div", {id: "sideSection"}, 
 	        React.createElement("h3", null, "Votes"), 
 	        React.createElement("ul", null, 
 	          React.createElement("li", null, "1"), 
