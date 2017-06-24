@@ -23,6 +23,12 @@ var Actions = {
       id,
       text
     })
+  },
+  destroy: function(id){
+    AppDispatcher.handleViewAction({
+      actionType: Constants.TODO_DESTROY,
+      id,
+    })
   }
 }
 

@@ -19,6 +19,13 @@ function create(text){
 function updateCount(id, num){
   _topics[id]['count'] += num
 }
+function destroy(id){
+  delete _topics[id]
+}
+
+
+
+
 var Store = assign({}, EventEmitter.prototype, {
   getAll: function(){
     return _topics
@@ -66,6 +73,10 @@ AppDispatcher.register(function(payload){
 
     case Constants.TOPIC_DECREMENT:
       updateCount(action.id, -1)
+      break;
+    
+    case Constants.TOPIC_DESTROY:
+      destroy(action.id)
       break;
 
     default: 

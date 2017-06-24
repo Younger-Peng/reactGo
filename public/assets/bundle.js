@@ -19129,6 +19129,12 @@
 	      id,
 	      text
 	    })
+	  },
+	  destroy: function(id){
+	    AppDispatcher.handleViewAction({
+	      actionType: Constants.TODO_DESTROY,
+	      id,
+	    })
 	  }
 	}
 
@@ -19307,6 +19313,13 @@
 	function updateCount(id, num){
 	  _topics[id]['count'] += num
 	}
+	function destroy(id){
+	  delete _topics[id]
+	}
+
+
+
+
 	var Store = assign({}, EventEmitter.prototype, {
 	  getAll: function(){
 	    return _topics
@@ -19354,6 +19367,10 @@
 
 	    case Constants.TOPIC_DECREMENT:
 	      updateCount(action.id, -1)
+	      break;
+	    
+	    case Constants.TOPIC_DESTROY:
+	      destroy(action.id)
 	      break;
 
 	    default: 
@@ -27331,7 +27348,7 @@
 	    Actions.decrement(this.props.topic.id, this.props.topic.text)
 	  },
 	  _onDestroy: function(){
-	    console.log('destroy')
+	    Actions.destroy(this.props.topic.id)
 	  }
 	})
 
