@@ -19,8 +19,8 @@ var Header = React.createClass({
       </header>
     )
   },
-  _onSave: function(){
-    console.log('header saved')
+  _onSave: function(value){
+    console.log(value)
   }
 })
 

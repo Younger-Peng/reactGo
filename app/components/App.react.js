@@ -22,7 +22,24 @@ var React = require('react')
 var SideSection = require('./SideSection.react')
 var Header = require('./Header.react')
 var MainSection = require('./MainSection.react')
+var Store = require('../stores/store')
+
+function getState(){
+  return {
+    allTopics: Store.getAll(),
+    topTopics: Store.getTopTopic()
+  }
+}
 var App = React.createClass({
+  getInitialState: function(){
+    return getState()
+  },
+  componentDidMount: function(){
+    console.log('componentDidMount')
+  },
+  componentWillMount: function(){
+    console.log('willMount')
+  },
   render: function(){
     return (
       <div>
@@ -31,6 +48,9 @@ var App = React.createClass({
         <MainSection />
       </div>
     )
+  },
+  _onChange: function(){
+    console.log('onchange!')
   }
 })
 

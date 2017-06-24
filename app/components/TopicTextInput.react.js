@@ -41,7 +41,10 @@ var TopicTextInput = React.createClass({
     })
   },
   _onKeyDown: function(event){
-    console.log('keydown')
+    if(event.keyCode === ENTER_KEY_CODE){
+      this._save()
+    }
+    
   },
 
 })
