@@ -21,13 +21,14 @@ var React = require('react')
 
 var SideSection = require('./SideSection.react')
 var Header = require('./Header.react')
-
+var MainSection = require('./MainSection.react')
 var App = React.createClass({
   render: function(){
     return (
       <div>
         <Header topTopic="topTopic_" topStatic="50" />
         <SideSection />
+        <MainSection />
       </div>
     )
   }

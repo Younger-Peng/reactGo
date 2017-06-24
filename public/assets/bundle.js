@@ -19025,13 +19025,14 @@
 
 	var SideSection = __webpack_require__(153)
 	var Header = __webpack_require__(149)
-
+	var MainSection = __webpack_require__(154)
 	var App = React.createClass({displayName: "App",
 	  render: function(){
 	    return (
 	      React.createElement("div", null, 
 	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"}), 
-	        React.createElement(SideSection, null)
+	        React.createElement(SideSection, null), 
+	        React.createElement(MainSection, null)
 	      )
 	    )
 	  }
@@ -19174,6 +19175,37 @@
 	})
 
 	module.exports = SideSection
+
+/***/ }),
+/* 154 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+
+	var MainSection = React.createClass({displayName: "MainSection",
+	  render: function(){
+	    return (
+	      React.createElement("section", {id: "main"}, 
+	        React.createElement("input", {
+	          id: "toggle-all", 
+	          type: "checkbox", 
+	          onChange: this._onToggleCompleteAll}), 
+	        React.createElement("label", {htmlFor: "toggle-all"}, "Toggle order"), 
+	        React.createElement("ul", null, 
+	          React.createElement("li", null, "1"), 
+	          React.createElement("li", null, "2"), 
+	          React.createElement("li", null, "3")
+	        )
+	      )
+	    )
+	  },
+	  _onToggleCompleteAll: function(){
+	    console.log('toggleCompleteAll')
+	  }
+	})
+
+	module.exports = MainSection
 
 /***/ })
 /******/ ]);
