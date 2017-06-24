@@ -19041,16 +19041,13 @@
 	    Store.addChangeListener(this._onChange)
 	    console.log('componentDidMount')
 	  },
-	  componentWillMount: function(){
-	    console.log('willMount')
-	  },
 	  componentWillUnmount: function(){
 	    Store.removeListener(_this._onChange)
 	  },
 	  render: function(){
 	    return (
 	      React.createElement("div", null, 
-	        React.createElement(Header, {topTopic: "topTopic_", topStatic: "50"}), 
+	        React.createElement(Header, {topTopic: this.state.topTopics.text, topStat: this.state.topTopics.stat}), 
 	        React.createElement(SideSection, {allTopics: this.state.allTopics}), 
 	        React.createElement(MainSection, {allTopics: this.state.allTopics})
 	      )
@@ -19081,7 +19078,7 @@
 	      React.createElement("header", {id: "header"}, 
 	        React.createElement("h1", null, "Trending Topics"), 
 	        React.createElement("h2", null, "Top Topics"), 
-	        React.createElement(Statistics, {topTopic: "test", topStat: "90"}), 
+	        React.createElement(Statistics, {topTopic: this.props.topTopic, topStat: this.props.topStat}), 
 	        React.createElement(TopicTextInput, {
 	          id: "new-topic", 
 	          placeholder: "What is your concern?", 

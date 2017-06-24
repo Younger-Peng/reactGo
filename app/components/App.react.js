@@ -38,16 +38,13 @@ var App = React.createClass({
     Store.addChangeListener(this._onChange)
     console.log('componentDidMount')
   },
-  componentWillMount: function(){
-    console.log('willMount')
-  },
   componentWillUnmount: function(){
     Store.removeListener(_this._onChange)
   },
   render: function(){
     return (
       <div>
-        <Header topTopic="topTopic_" topStatic="50" />
+        <Header topTopic={this.state.topTopics.text} topStat={this.state.topTopics.stat} />
         <SideSection allTopics={this.state.allTopics} />
         <MainSection allTopics={this.state.allTopics}/>
       </div>

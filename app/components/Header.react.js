@@ -10,7 +10,7 @@ var Header = React.createClass({
       <header id="header">
         <h1>Trending Topics</h1>
         <h2>Top Topics</h2>
-        <Statistics topTopic="test" topStat="90"/>
+        <Statistics topTopic={this.props.topTopic} topStat={this.props.topStat} />
         <TopicTextInput
           id="new-topic"
           placeholder="What is your concern?"
