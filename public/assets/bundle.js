@@ -19132,7 +19132,7 @@
 	  },
 	  destroy: function(id){
 	    AppDispatcher.handleViewAction({
-	      actionType: Constants.TODO_DESTROY,
+	      actionType: Constants.TOPIC_DESTROY,
 	      id,
 	    })
 	  },
@@ -26991,7 +26991,8 @@
 	  TODO_COMPLETE: null,
 	  TOPIC_INCREMENT: null,
 	  TOPIC_DECREMENT: null,
-	  TODO_UPDATE_TEXT: null
+	  TODO_UPDATE_TEXT: null,
+	  TOPIC_DESTROY: null
 	})
 
 
