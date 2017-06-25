@@ -15,7 +15,7 @@ var SideSection = React.createClass({
       topListItems.push(<TopicCountItem key={topic.id} title={topic.text} count={topic.count}/>)
     })
     return (
-      <div id="sideSection">
+      <div id="side-section">
         <h3>Votes</h3>
         <ul>{topListItems}</ul>
       </div>

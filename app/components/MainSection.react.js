@@ -18,7 +18,7 @@ var MainSection = React.createClass({
       topics.push(<TopicItem key={key} topic={allTopics[key]}/>)
     }
     return (
-      <section id="main">
+      <section id="main-section">
         <input
           id="toggle-all"
           type="checkbox"

@@ -19272,7 +19272,7 @@
 	      topListItems.push(React.createElement(TopicCountItem, {key: topic.id, title: topic.text, count: topic.count}))
 	    })
 	    return (
-	      React.createElement("div", {id: "sideSection"}, 
+	      React.createElement("div", {id: "side-section"}, 
 	        React.createElement("h3", null, "Votes"), 
 	        React.createElement("ul", null, topListItems)
 	      )
@@ -19310,7 +19310,7 @@
 	      topics.push(React.createElement(TopicItem, {key: key, topic: allTopics[key]}))
 	    }
 	    return (
-	      React.createElement("section", {id: "main"}, 
+	      React.createElement("section", {id: "main-section"}, 
 	        React.createElement("input", {
 	          id: "toggle-all", 
 	          type: "checkbox", 
