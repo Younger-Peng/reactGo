@@ -19,19 +19,12 @@ var MainSection = React.createClass({
     }
     return (
       <section id="main-section">
-        <input
-          id="toggle-all"
-          type="checkbox"
-          onChange={this._onToggleCompleteAll}/>
-        <label htmlFor="toggle-all">Toggle order</label>
+        <h3>Vote</h3>
         <ul id="todo-list">{topics}</ul>
       </section>
     )
-  },
-  _onToggleCompleteAll: function(){
-    console.log('toggleCompleteAll')
-    Actions.toggleCompleteAll()
   }
+  
 })
 
 module.exports = MainSection

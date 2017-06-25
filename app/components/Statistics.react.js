@@ -5,7 +5,7 @@ var Statistics = React.createClass({
     return (
       <div id="stat-section">
         <span className="topic">{this.props.topTopic}</span>
-        <span>{this.props.topStat + '%'}</span>
+        <span className="stat">{this.props.topStat + '%'}</span>
       </div>
     )
   }

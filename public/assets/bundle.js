@@ -19243,7 +19243,7 @@
 	    return (
 	      React.createElement("div", {id: "stat-section"}, 
 	        React.createElement("span", {className: "topic"}, this.props.topTopic), 
-	        React.createElement("span", null, this.props.topStat + '%')
+	        React.createElement("span", {className: "stat"}, this.props.topStat + '%')
 	      )
 	    )
 	  }
@@ -19311,19 +19311,12 @@
 	    }
 	    return (
 	      React.createElement("section", {id: "main-section"}, 
-	        React.createElement("input", {
-	          id: "toggle-all", 
-	          type: "checkbox", 
-	          onChange: this._onToggleCompleteAll}), 
-	        React.createElement("label", {htmlFor: "toggle-all"}, "Toggle order"), 
+	        React.createElement("h3", null, "Vote"), 
 	        React.createElement("ul", {id: "todo-list"}, topics)
 	      )
 	    )
-	  },
-	  _onToggleCompleteAll: function(){
-	    console.log('toggleCompleteAll')
-	    Actions.toggleCompleteAll()
 	  }
+	  
 	})
 
 	module.exports = MainSection
