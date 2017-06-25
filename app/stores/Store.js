@@ -3,6 +3,7 @@ var assign = require('object-assign')
 var EventEmitter = require('events').EventEmitter;
 var AppDispatcher = require('../dispatcher/AppDispatcher')
 var Constants = require('../constants/Constants')
+var TopicWebAPIUtils = require('../utils/TopicWebAPIUtils')
 
 var _topics = {}
 var CHANGE_EVENT = 'change'
@@ -15,9 +16,11 @@ function create(text){
     count: 1,
     text
   }
+  TopicWebAPIUtils.addTopic(_topics[id])
 }
-function updateCount(id, num){
-  _topics[id]['count'] += num
+function updateCount(id, update){
+  _topics[id]['count'] += update
+  TopicWebAPIUtils.updateTopic(_topics[id])
 }
 function destroy(id){
   delete _topics[id]

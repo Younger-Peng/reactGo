@@ -16,7 +16,7 @@ var SideSection = React.createClass({
     })
     return (
       <div id="side-section">
-        <h3>Votes</h3>
+        <h3>Tolly</h3>
         <ul>{topListItems}</ul>
       </div>
     )

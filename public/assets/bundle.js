@@ -19083,12 +19083,12 @@
 	  render: function(){
 	    return (
 	      React.createElement("header", {id: "header"}, 
-	        React.createElement("h1", null, "Trending Topics"), 
-	        React.createElement("h2", null, "Top Topics"), 
+	        React.createElement("h1", null, "Trending Burger Places"), 
+	        React.createElement("h2", null, "Top Burger"), 
 	        React.createElement(Statistics, {topTopic: this.props.topTopic, topStat: this.props.topStat}), 
 	        React.createElement(TopicTextInput, {
 	          id: "new-topic", 
-	          placeholder: "What is your concern?", 
+	          placeholder: "Fav Burger?", 
 	          onSave: this._onSave})
 
 	      )
@@ -19120,18 +19120,16 @@
 	      text
 	    })
 	  },
-	  increment: function(id, text){
+	  increment: function(id){
 	    AppDispatcher.handleViewAction({
 	      actionType: Constants.TOPIC_INCREMENT,
 	      id,
-	      text
 	    })
 	  },
-	  decrement: function(id, text){
+	  decrement: function(id){
 	    AppDispatcher.handleViewAction({
 	      actionType: Constants.TOPIC_DECREMENT,
 	      id,
-	      text
 	    })
 	  },
 	  destroy: function(id){
@@ -19273,7 +19271,7 @@
 	    })
 	    return (
 	      React.createElement("div", {id: "side-section"}, 
-	        React.createElement("h3", null, "Votes"), 
+	        React.createElement("h3", null, "Tolly"), 
 	        React.createElement("ul", null, topListItems)
 	      )
 	    )
@@ -19293,6 +19291,7 @@
 	var React = __webpack_require__(1)
 	var ReactPropTypes = React.PropTypes
 	var TopicItem = __webpack_require__(166)
+	var _ = __webpack_require__(156)
 
 	var MainSection = React.createClass({displayName: "MainSection",
 	  propTypes: {
@@ -19306,9 +19305,9 @@
 	    }
 	    var allTopics = this.props.allTopics;
 	    var topics = [];
-	    for(var key in allTopics){
-	      topics.push(React.createElement(TopicItem, {key: key, topic: allTopics[key]}))
-	    }
+	    _.forEach(allTopics, function(value, key){
+	      topics.push(React.createElement(TopicItem, {id: key, key: key, topic: value}))
+	    })
 	    return (
 	      React.createElement("section", {id: "main-section"}, 
 	        React.createElement("h3", null, "Vote"), 
@@ -19316,7 +19315,7 @@
 	      )
 	    )
 	  }
-	  
+
 	})
 
 	module.exports = MainSection
@@ -19330,6 +19329,7 @@
 	var EventEmitter = __webpack_require__(159).EventEmitter;
 	var AppDispatcher = __webpack_require__(160)
 	var Constants = __webpack_require__(161)
+	var TopicWebAPIUtils = __webpack_require__(169)
 
 	var _topics = {}
 	var CHANGE_EVENT = 'change'
@@ -19342,9 +19342,11 @@
 	    count: 1,
 	    text
 	  }
+	  TopicWebAPIUtils.addTopic(_topics[id])
 	}
-	function updateCount(id, num){
-	  _topics[id]['count'] += num
+	function updateCount(id, update){
+	  _topics[id]['count'] += update
+	  TopicWebAPIUtils.updateTopic(_topics[id])
 	}
 	function destroy(id){
 	  delete _topics[id]
@@ -27426,10 +27428,10 @@
 	  },
 	  _onIncrement: function(){
 	    console.log(this.props.topic)
-	    Actions.increment(this.props.topic.id, this.props.topic.text)
+	    Actions.increment(this.props.topic.id)
 	  },
 	  _onDecrement: function(){
-	    Actions.decrement(this.props.topic.id, this.props.topic.text)
+	    Actions.decrement(this.props.topic.id)
 	  },
 	  _onDestroy: function(){
 	    Actions.destroy(this.props.topic.id)
@@ -27527,9 +27529,35 @@
 	    $.ajax(defaultConfig)
 	     .then(function(data, textStatus, jqXHR){
 	      ServerActions.receiveCreatedTopics(data)
-	     }, function(jqXHR, data, errorThrow){
+	     }, function(jqXHR, data, errorThrown){
 	       console.log(errorThrow)
 	     })
+	  },
+	  addTopic: function(topic){
+	    $.ajax({
+	      url: '/topic',
+	      data: JSON.stringify(topic),
+	      type: 'POST',
+	      contentType: 'application/json; charset=UTF-8' 
+	    })
+	    .then(function(data, textStatus, jqXHR){
+	      console.log(data)
+	    }, function(jqXHR, textStatus, errorThrown){
+	      console.log(errorThrown)
+	    })
+	  },
+	  updateTopic: function(topic){
+	    $.ajax({
+	      url: '/topic',
+	      type: 'PUT',
+	      data: JSON.stringify(topic),
+	      contentType: 'application/json; charset=UTF-8'
+	    })
+	    .then(function(data, textStatus, jqXHR){
+	      console.log(data)
+	    }, function(jqXHR, textStatus, errorThrown){
+	      console.log(errorThrown)
+	    })
 	  }
 	}
 

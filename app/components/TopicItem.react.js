@@ -46,10 +46,10 @@ var TopicItem = React.createClass({
   },
   _onIncrement: function(){
     console.log(this.props.topic)
-    Actions.increment(this.props.topic.id, this.props.topic.text)
+    Actions.increment(this.props.topic.id)
   },
   _onDecrement: function(){
-    Actions.decrement(this.props.topic.id, this.props.topic.text)
+    Actions.decrement(this.props.topic.id)
   },
   _onDestroy: function(){
     Actions.destroy(this.props.topic.id)
