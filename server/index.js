@@ -9,6 +9,25 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 //   response.send('Hello World')
 // })
 
+app.get('/topics', function(request, response){
+  response.json({
+    '1234': {
+      id: 1234,
+      count: 4,
+      text: 'Cafe 51 is pretty decent'
+    },
+    '2345': {
+      id: 2345,
+      count: 10,
+      text: 'But Merrywell makes really awesome burgers'
+    },
+    '3456': {
+      id: 3456,
+      count: 12,
+      text: 'Ken Burger'
+    },
+  })
+})
 app.listen(app.get('port'), function(){
   console.log('Node app is running at localhost: ' + app.get('port'))
 })

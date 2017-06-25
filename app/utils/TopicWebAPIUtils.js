@@ -2,7 +2,7 @@ var $ = require('jquery')
 var ServerActions = require('../actions/ServerActions')
 
 var defaultConfig = {
-  url: '/topic',
+  url: '/topics',
   type: 'GET',
   dataType: 'json'
 }

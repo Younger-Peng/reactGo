@@ -26,6 +26,7 @@
     "express": "4.10.2",
     "file-loader": "^0.8.1",
     "flux": "^2.0.1",
+    "jquery": "^2.1.1",
     "jsx-loader": "^0.13.2",
     "keymirror": "^0.1.0",
     "lodash": "^2.4.1",
