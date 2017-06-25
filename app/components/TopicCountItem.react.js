@@ -5,7 +5,7 @@ var TopicCountItem = React.createClass({
     return (
       <li key={this.props.key}>
         <span>{this.props.title}</span>
-        <span>{this.props.count}</span>
+        <span className="count">{this.props.count}</span>
       </li>
     )
   }

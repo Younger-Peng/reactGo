@@ -19241,8 +19241,8 @@
 	var Statistics = React.createClass({displayName: "Statistics",
 	  render: function(){
 	    return (
-	      React.createElement("div", null, 
-	        React.createElement("span", null, this.props.topTopic), 
+	      React.createElement("div", {id: "stat-section"}, 
+	        React.createElement("span", {className: "topic"}, this.props.topTopic), 
 	        React.createElement("span", null, this.props.topStat + '%')
 	      )
 	    )
@@ -27465,7 +27465,7 @@
 	    return (
 	      React.createElement("li", {key: this.props.key}, 
 	        React.createElement("span", null, this.props.title), 
-	        React.createElement("span", null, this.props.count)
+	        React.createElement("span", {className: "count"}, this.props.count)
 	      )
 	    )
 	  }
