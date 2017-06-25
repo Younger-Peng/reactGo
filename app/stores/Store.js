@@ -30,6 +30,9 @@ function updateText(id, text){
 
 
 var Store = assign({}, EventEmitter.prototype, {
+  init: function(rawTopics){
+    _topics = rawTopics
+  },
   getAll: function(){
     return _topics
   },
@@ -82,6 +85,10 @@ AppDispatcher.register(function(payload){
       destroy(action.id)
       break;
 
+    case Constants.RECEIVE_RAW_TOPICS: 
+      Store.init(action.data)
+      break;
+
     case Constants.TODO_UPDATE_TEXT:
       updateText(action.id, action.text)
       break;
@@ -91,7 +98,6 @@ AppDispatcher.register(function(payload){
   }
 
   Store.emitChange()
-
   return true
 })
 

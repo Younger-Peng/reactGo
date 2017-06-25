@@ -19364,6 +19364,9 @@
 
 
 	var Store = assign({}, EventEmitter.prototype, {
+	  init: function(rawTopics){
+	    _topics = rawTopics
+	  },
 	  getAll: function(){
 	    return _topics
 	  },
@@ -19416,6 +19419,10 @@
 	      destroy(action.id)
 	      break;
 
+	    case Constants.RECEIVE_RAW_TOPICS: 
+	      Store.init(action.data)
+	      break;
+
 	    case Constants.TODO_UPDATE_TEXT:
 	      updateText(action.id, action.text)
 	      break;
@@ -19425,7 +19432,6 @@
 	  }
 
 	  Store.emitChange()
-
 	  return true
 	})
 
@@ -26983,7 +26989,7 @@
 	  handleServerAction: function(action){
 	    this.dispatch({
 	      source: 'SERVER_ACTION',
-	      action: action
+	      action
 	    })
 	  }
 	})
@@ -27002,7 +27008,8 @@
 	  TOPIC_INCREMENT: null,
 	  TOPIC_DECREMENT: null,
 	  TODO_UPDATE_TEXT: null,
-	  TOPIC_DESTROY: null
+	  TOPIC_DESTROY: null,
+	  RECEIVE_RAW_TOPICS: null
 	})
 
 
