@@ -13,7 +13,7 @@ module.exports = {
      .then(function(data, textStatus, jqXHR){
       ServerActions.receiveCreatedTopics(data)
      }, function(jqXHR, data, errorThrown){
-       console.log(errorThrow)
+       console.log(errorThrown)
      })
   },
   addTopic: function(topic){

@@ -34,7 +34,13 @@ function updateText(id, text){
 
 var Store = assign({}, EventEmitter.prototype, {
   init: function(rawTopics){
-    _topics = rawTopics
+    _topics = _.chain(rawTopics)
+               .map(function(topic){
+                 topic.id = topic.id
+                 return [topic.id, topic]
+               })
+               .object()
+               .value()
   },
   getAll: function(){
     return _topics

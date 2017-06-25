@@ -19026,10 +19026,10 @@
 
 	var React = __webpack_require__(1)
 
-	var SideSection = __webpack_require__(153)
-	var Header = __webpack_require__(149)
-	var MainSection = __webpack_require__(154)
-	var Store = __webpack_require__(155)
+	var SideSection = __webpack_require__(149)
+	var Header = __webpack_require__(161)
+	var MainSection = __webpack_require__(164)
+	var Store = __webpack_require__(167)
 
 	function getState(){
 	  //每次运行此函数都会得到store里面最新的数据
@@ -19074,42 +19074,42 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
 	var Actions = __webpack_require__(150)
-	var TopicTextInput = __webpack_require__(151)
-	var Statistics = __webpack_require__(152)
+	var TopicCountItem = __webpack_require__(158)
+	var _ = __webpack_require__(159)
 
-
-	var Header = React.createClass({displayName: "Header",
+	var SideSection = React.createClass({displayName: "SideSection",
+	  PropTypes: {
+	    allTopics: ReactPropTypes.object.isRequired
+	  },
 	  render: function(){
+	    var allTopics = this.props.allTopics
+	    var topListItems = []
+	    _.forEach(allTopics, function(topic) {
+	      topListItems.push(React.createElement(TopicCountItem, {key: topic.id, title: topic.text, count: topic.count}))
+	    })
 	    return (
-	      React.createElement("header", {id: "header"}, 
-	        React.createElement("h1", null, "Trending Burger Places"), 
-	        React.createElement("h2", null, "Top Burger"), 
-	        React.createElement(Statistics, {topTopic: this.props.topTopic, topStat: this.props.topStat}), 
-	        React.createElement(TopicTextInput, {
-	          id: "new-topic", 
-	          placeholder: "Fav Burger?", 
-	          onSave: this._onSave})
-
+	      React.createElement("div", {id: "side-section"}, 
+	        React.createElement("h3", null, "Tolly"), 
+	        React.createElement("ul", null, topListItems)
 	      )
 	    )
 	  },
-	  _onSave: function(text){
-	    console.log(text)
-	    if(text.trim()){
-	      Actions.create(text)
-	    }
+	  //不知道这行代码是什么意思，目前还没添加到AppDispatcher里
+	  onClearCompletedClick: function(){
+	    Actions.destroyCompleted()
 	  }
 	})
 
-	module.exports = Header
+	module.exports = SideSection
 
 /***/ }),
 /* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(160)
-	var Constants = __webpack_require__(161)
+	var AppDispatcher = __webpack_require__(151)
+	var Constants = __webpack_require__(156)
 
 
 
@@ -19177,265 +19177,476 @@
 /* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1)
-	var ReactPropTypes = React.PropTypes
+	var Dispatcher = __webpack_require__(152).Dispatcher;
+	var assign  = __webpack_require__(155);
 
-	var ENTER_KEY_CODE = 13
-
-	var TopicTextInput = React.createClass({displayName: "TopicTextInput",
-	  propTypes: {
-	    className: ReactPropTypes.string,
-	    id: ReactPropTypes.string,
-	    placeholder: ReactPropTypes.string,
-	    onSave: ReactPropTypes.func.isRequired,
-	    value: ReactPropTypes.string
-	  },
-	  getInitialState: function(){
-	    return {
-	      value: this.props.value || ''
-	    }
-	  },
-	  render: function(){
-	    return (
-	      React.createElement("input", {
-	        className: this.props.className, 
-	        id: this.props.id, 
-	        placeholder: this.props.placeholder, 
-	        onBlur: this._save, 
-	        onChange: this._onChange, 
-	        onKeyDown: this._onKeyDown, 
-	        value: this.state.value, 
-	        autoFocus: true})
-	    )
-	  },
-	  _save: function(){
-	    this.props.onSave(this.state.value)
-	    this.setState({
-	      value: ''
+	// add a new method to Dispatcher,because there is a source to add .
+	var AppDispatcher = assign(new Dispatcher(), {
+	  handleViewAction: function(action){
+	    this.dispatch({
+	      source: 'VIEW_ACTION',
+	      action: action
 	    })
 	  },
-	  _onChange: function(event){
-	    this.setState({
-	      value: event.target.value
+	  handleServerAction: function(action){
+	    this.dispatch({
+	      source: 'SERVER_ACTION',
+	      action
 	    })
-	  },
-	  _onKeyDown: function(event){
-	    if(event.keyCode === ENTER_KEY_CODE){
-	      this._save()
-	    }
-	    
-	  },
-
+	  }
 	})
 
-	module.exports = TopicTextInput
+	module.exports = AppDispatcher
 
 /***/ }),
 /* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1)
+	/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
 
-	var Statistics = React.createClass({displayName: "Statistics",
-	  render: function(){
-	    return (
-	      React.createElement("div", {id: "stat-section"}, 
-	        React.createElement("span", {className: "topic"}, this.props.topTopic), 
-	        React.createElement("span", {className: "stat"}, this.props.topStat + '%')
-	      )
-	    )
-	  }
-	})
+	module.exports.Dispatcher = __webpack_require__(153);
 
-	module.exports = Statistics
 
 /***/ }),
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1)
-	var ReactPropTypes = React.PropTypes
-	var Actions = __webpack_require__(150)
-	var TopicCountItem = __webpack_require__(167)
-	var _ = __webpack_require__(156)
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
+	 */
 
-	var SideSection = React.createClass({displayName: "SideSection",
-	  PropTypes: {
-	    allTopics: ReactPropTypes.object.isRequired
-	  },
-	  render: function(){
-	    var allTopics = this.props.allTopics
-	    var topListItems = []
-	    _.forEach(allTopics, function(topic) {
-	      topListItems.push(React.createElement(TopicCountItem, {key: topic.id, title: topic.text, count: topic.count}))
-	    })
-	    return (
-	      React.createElement("div", {id: "side-section"}, 
-	        React.createElement("h3", null, "Tolly"), 
-	        React.createElement("ul", null, topListItems)
-	      )
-	    )
-	  },
-	  //不知道这行代码是什么意思，目前还没添加到AppDispatcher里
-	  onClearCompletedClick: function(){
-	    Actions.destroyCompleted()
+	'use strict';
+
+	exports.__esModule = true;
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var invariant = __webpack_require__(154);
+
+	var _prefix = 'ID_';
+
+	/**
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
+	 */
+
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
+
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
 	  }
-	})
 
-	module.exports = SideSection
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
+
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
+
+	  /**
+	   * Removes a callback based on its token.
+	   */
+
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
+
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
+
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
+	    }
+	  };
+
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
+	        }
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
+
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
+
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+
+	  return Dispatcher;
+	})();
+
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1)
-	var ReactPropTypes = React.PropTypes
-	var TopicItem = __webpack_require__(166)
-	var _ = __webpack_require__(156)
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
 
-	var MainSection = React.createClass({displayName: "MainSection",
-	  propTypes: {
-	    allTopics: ReactPropTypes.object.isRequired
-	  },
-	  render: function(){
-	    var keys = Object.keys(this.props.allTopics)
-	    if(keys.length < 1){
-	      console.log(keys)
-	      return null
+	"use strict";
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
 	    }
-	    var allTopics = this.props.allTopics;
-	    var topics = [];
-	    _.forEach(allTopics, function(value, key){
-	      topics.push(React.createElement(TopicItem, {id: key, key: key, topic: value}))
-	    })
-	    return (
-	      React.createElement("section", {id: "main-section"}, 
-	        React.createElement("h3", null, "Vote"), 
-	        React.createElement("ul", {id: "todo-list"}, topics)
-	      )
-	    )
 	  }
 
-	})
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
 
-	module.exports = MainSection
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 155 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-	var _ = __webpack_require__(156)
-	var assign = __webpack_require__(158)
-	var EventEmitter = __webpack_require__(159).EventEmitter;
-	var AppDispatcher = __webpack_require__(160)
-	var Constants = __webpack_require__(161)
-	var TopicWebAPIUtils = __webpack_require__(169)
+	'use strict';
 
-	var _topics = {}
-	var CHANGE_EVENT = 'change'
+	function ToObject(val) {
+		if (val == null) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
 
-	function create(text){
-	  console.log('created text')
-	  var id = Date.now()
-	  _topics[id] = {
-	    id,
-	    count: 1,
-	    text
-	  }
-	  TopicWebAPIUtils.addTopic(_topics[id])
-	}
-	function updateCount(id, update){
-	  _topics[id]['count'] += update
-	  TopicWebAPIUtils.updateTopic(_topics[id])
-	}
-	function destroy(id){
-	  delete _topics[id]
-	}
-	function updateText(id, text){
-	  _topics[id].text = text
+		return Object(val);
 	}
 
+	module.exports = Object.assign || function (target, source) {
+		var pendingException;
+		var from;
+		var keys;
+		var to = ToObject(target);
 
+		for (var s = 1; s < arguments.length; s++) {
+			from = arguments[s];
+			keys = Object.keys(Object(from));
 
+			for (var i = 0; i < keys.length; i++) {
+				try {
+					to[keys[i]] = from[keys[i]];
+				} catch (err) {
+					if (pendingException === undefined) {
+						pendingException = err;
+					}
+				}
+			}
+		}
 
-	var Store = assign({}, EventEmitter.prototype, {
-	  init: function(rawTopics){
-	    _topics = rawTopics
-	  },
-	  getAll: function(){
-	    return _topics
-	  },
-	  getTopTopic: function(){
-	    var sum, topTopic, stat;
+		if (pendingException) {
+			throw pendingException;
+		}
 
-	    sum = _.reduce(_topics, function(sum, topic){
-	      return sum + topic.count
-	    }, 0)
-
-	    topTopic = _.max(_topics, function(topic){
-	      return topic.count
-	    })
-	    stat = isNaN(topTopic.count/sum) ? 0 : topTopic.count/sum * 100;
-
-	    return assign({}, topTopic, {'stat': stat});
-	  },
-	  emitChange: function(){
-	    this.emit(CHANGE_EVENT)
-	  },
-	  addChangeListener: function(callback){
-	    this.on(CHANGE_EVENT, callback)
-	  },
-	  removeChangeListener: function(callback){
-	    this.removeListener(CHANGE_EVENT, callback)
-	  }
-	})
-
-
-	AppDispatcher.register(function(payload){
-	  var action = payload.action;
-	  var text
-
-	  switch(action.actionType){
-	    case Constants.TOPIC_CREATE:
-	      text = action.text.trim();
-	      if(text !== ''){
-	        create(text)
-	      }
-	      break;
-	    case Constants.TOPIC_INCREMENT:
-	      updateCount(action.id, 1);
-	      break;
-
-	    case Constants.TOPIC_DECREMENT:
-	      updateCount(action.id, -1)
-	      break;
-	    
-	    case Constants.TOPIC_DESTROY:
-	      destroy(action.id)
-	      break;
-
-	    case Constants.RECEIVE_RAW_TOPICS: 
-	      Store.init(action.data)
-	      break;
-
-	    case Constants.TODO_UPDATE_TEXT:
-	      updateText(action.id, action.text)
-	      break;
-
-	    default: 
-	      return true
-	  }
-
-	  Store.emitChange()
-	  return true
-	})
-
-	module.exports = Store
-
+		return to;
+	};
 
 
 /***/ }),
 /* 156 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var keymirror = __webpack_require__(157);
+
+	module.exports = keymirror({
+	  TOPIC_CREATE: null,
+	  TODO_COMPLETE: null,
+	  TOPIC_INCREMENT: null,
+	  TOPIC_DECREMENT: null,
+	  TODO_UPDATE_TEXT: null,
+	  TOPIC_DESTROY: null,
+	  RECEIVE_RAW_TOPICS: null
+	})
+
+
+
+/***/ }),
+/* 157 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 */
+
+	"use strict";
+
+	/**
+	 * Constructs an enumeration with keys equal to their value.
+	 *
+	 * For example:
+	 *
+	 *   var COLORS = keyMirror({blue: null, red: null});
+	 *   var myColor = COLORS.blue;
+	 *   var isColorValid = !!COLORS[myColor];
+	 *
+	 * The last line could not be performed if the values of the generated enum were
+	 * not equal to their keys.
+	 *
+	 *   Input:  {key1: val1, key2: val2}
+	 *   Output: {key1: key1, key2: key2}
+	 *
+	 * @param {object} obj
+	 * @return {object}
+	 */
+	var keyMirror = function(obj) {
+	  var ret = {};
+	  var key;
+	  if (!(obj instanceof Object && !Array.isArray(obj))) {
+	    throw new Error('keyMirror(...): Argument must be an object.');
+	  }
+	  for (key in obj) {
+	    if (!obj.hasOwnProperty(key)) {
+	      continue;
+	    }
+	    ret[key] = key;
+	  }
+	  return ret;
+	};
+
+	module.exports = keyMirror;
+
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+
+	var TopicCountItem = React.createClass({displayName: "TopicCountItem",
+	  render: function(){
+	    return (
+	      React.createElement("li", {key: this.props.key}, 
+	        React.createElement("span", {className: "title"}, this.props.title), 
+	        React.createElement("span", {className: "count"}, this.props.count)
+	      )
+	    )
+	  }
+	})
+
+	module.exports = TopicCountItem
+
+/***/ }),
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -26597,10 +26808,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(157)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(160)(module), (function() { return this; }())))
 
 /***/ }),
-/* 157 */
+/* 160 */
 /***/ (function(module, exports) {
 
 	module.exports = function(module) {
@@ -26616,50 +26827,390 @@
 
 
 /***/ }),
-/* 158 */
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var Actions = __webpack_require__(150)
+	var TopicTextInput = __webpack_require__(162)
+	var Statistics = __webpack_require__(163)
+
+
+	var Header = React.createClass({displayName: "Header",
+	  render: function(){
+	    return (
+	      React.createElement("header", {id: "header"}, 
+	        React.createElement("h1", null, "Trending Burger Places"), 
+	        React.createElement("h2", null, "Top Burger"), 
+	        React.createElement(Statistics, {topTopic: this.props.topTopic, topStat: this.props.topStat}), 
+	        React.createElement(TopicTextInput, {
+	          id: "new-topic", 
+	          placeholder: "Fav Burger?", 
+	          onSave: this._onSave})
+
+	      )
+	    )
+	  },
+	  _onSave: function(text){
+	    console.log(text)
+	    if(text.trim()){
+	      Actions.create(text)
+	    }
+	  }
+	})
+
+	module.exports = Header
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+
+	var ENTER_KEY_CODE = 13
+
+	var TopicTextInput = React.createClass({displayName: "TopicTextInput",
+	  propTypes: {
+	    className: ReactPropTypes.string,
+	    id: ReactPropTypes.string,
+	    placeholder: ReactPropTypes.string,
+	    onSave: ReactPropTypes.func.isRequired,
+	    value: ReactPropTypes.string
+	  },
+	  getInitialState: function(){
+	    return {
+	      value: this.props.value || ''
+	    }
+	  },
+	  render: function(){
+	    return (
+	      React.createElement("input", {
+	        className: this.props.className, 
+	        id: this.props.id, 
+	        placeholder: this.props.placeholder, 
+	        onBlur: this._save, 
+	        onChange: this._onChange, 
+	        onKeyDown: this._onKeyDown, 
+	        value: this.state.value, 
+	        autoFocus: true})
+	    )
+	  },
+	  _save: function(){
+	    this.props.onSave(this.state.value)
+	    this.setState({
+	      value: ''
+	    })
+	  },
+	  _onChange: function(event){
+	    this.setState({
+	      value: event.target.value
+	    })
+	  },
+	  _onKeyDown: function(event){
+	    if(event.keyCode === ENTER_KEY_CODE){
+	      this._save()
+	    }
+	    
+	  },
+
+	})
+
+	module.exports = TopicTextInput
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+
+	var Statistics = React.createClass({displayName: "Statistics",
+	  render: function(){
+	    return (
+	      React.createElement("div", {id: "stat-section"}, 
+	        React.createElement("span", {className: "topic"}, this.props.topTopic), 
+	        React.createElement("span", {className: "stat"}, this.props.topStat + '%')
+	      )
+	    )
+	  }
+	})
+
+	module.exports = Statistics
+
+/***/ }),
+/* 164 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+	var TopicItem = __webpack_require__(165)
+	var _ = __webpack_require__(159)
+
+	var MainSection = React.createClass({displayName: "MainSection",
+	  propTypes: {
+	    allTopics: ReactPropTypes.object.isRequired
+	  },
+	  render: function(){
+	    var keys = Object.keys(this.props.allTopics)
+	    if(keys.length < 1){
+	      console.log(keys)
+	      return null
+	    }
+	    var allTopics = this.props.allTopics;
+	    var topics = [];
+	    _.forEach(allTopics, function(value, key){
+	      topics.push(React.createElement(TopicItem, {id: key, key: key, topic: value}))
+	    })
+	    return (
+	      React.createElement("section", {id: "main-section"}, 
+	        React.createElement("h3", null, "Vote"), 
+	        React.createElement("ul", {id: "todo-list"}, topics)
+	      )
+	    )
+	  }
+
+	})
+
+	module.exports = MainSection
+
+/***/ }),
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1)
+	var ReactPropTypes = React.PropTypes
+	var Actions = __webpack_require__(150)
+	var TopicTextInput = __webpack_require__(162)
+	var cx = __webpack_require__(166)
+
+	var TopicItem = React.createClass({displayName: "TopicItem",
+	  propTypes: {
+	    topic: ReactPropTypes.object.isRequired
+	  },
+	  getInitialState: function(){
+	    return {
+	      isEditing: false
+	    }
+	  },
+	  render: function(){
+	    var topic = this.props.topic
+	    var input
+	    if(this.state.isEditing){
+	      input = 
+	      React.createElement(TopicTextInput, {
+	        className: "edit", 
+	        onSave: this._onSave, 
+	        value: topic.text}
+	       )
+	    }
+
+	    return (
+	      React.createElement("li", {className: cx({
+	        'editing': this.state.isEditing
+	      }), key: topic.id}, 
+	        React.createElement("div", {className: "view"}, 
+	          React.createElement("label", {onDoubleClick: this._onDoubleClick}, topic.text), 
+	          React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
+	          React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
+	          React.createElement("button", {className: "destroy", onClick: this._onDestroy}, String.fromCharCode(215))
+	        ), 
+	        input
+	      )
+	    )
+	  },
+	  _onDoubleClick: function(){
+	    this.setState({
+	      isEditing: true
+	    })
+	  },
+	  _onIncrement: function(){
+	    console.log(this.props.topic)
+	    Actions.increment(this.props.topic.id)
+	  },
+	  _onDecrement: function(){
+	    Actions.decrement(this.props.topic.id)
+	  },
+	  _onDestroy: function(){
+	    Actions.destroy(this.props.topic.id)
+	  },
+	  _onToggleComplete: function(){
+	    Actions.toggleComplete(this.props.topic)
+	  },
+	  _onSave: function(text){
+	    Actions.updateText(this.props.topic.id, text)
+	    this.setState({
+	      isEditing: false
+	    })
+	  }
+	})
+
+	module.exports = TopicItem
+
+/***/ }),
+/* 166 */
 /***/ (function(module, exports) {
 
-	'use strict';
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule cx
+	 */
 
-	function ToObject(val) {
-		if (val == null) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
+	/**
+	 * This function is used to mark string literals representing CSS class names
+	 * so that they can be transformed statically. This allows for modularization
+	 * and minification of CSS class names.
+	 *
+	 * In static_upstream, this function is actually implemented, but it should
+	 * eventually be replaced with something more descriptive, and the transform
+	 * that is used in the main stack should be ported for use elsewhere.
+	 *
+	 * @param string|object className to modularize, or an object of key/values.
+	 *                      In the object case, the values are conditions that
+	 *                      determine if the className keys should be included.
+	 * @param [string ...]  Variable list of classNames in the string case.
+	 * @return string       Renderable space-separated CSS className.
+	 */
+	function cx(classNames) {
+	  if (typeof classNames == 'object') {
+	    return Object.keys(classNames).filter(function(className) {
+	      return classNames[className];
+	    }).join(' ');
+	  } else {
+	    return Array.prototype.join.call(arguments, ' ');
+	  }
 	}
 
-	module.exports = Object.assign || function (target, source) {
-		var pendingException;
-		var from;
-		var keys;
-		var to = ToObject(target);
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = arguments[s];
-			keys = Object.keys(Object(from));
-
-			for (var i = 0; i < keys.length; i++) {
-				try {
-					to[keys[i]] = from[keys[i]];
-				} catch (err) {
-					if (pendingException === undefined) {
-						pendingException = err;
-					}
-				}
-			}
-		}
-
-		if (pendingException) {
-			throw pendingException;
-		}
-
-		return to;
-	};
+	module.exports = cx;
 
 
 /***/ }),
-/* 159 */
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(159)
+	var assign = __webpack_require__(155)
+	var EventEmitter = __webpack_require__(168).EventEmitter;
+	var AppDispatcher = __webpack_require__(151)
+	var Constants = __webpack_require__(156)
+	var TopicWebAPIUtils = __webpack_require__(169)
+
+	var _topics = {}
+	var CHANGE_EVENT = 'change'
+
+	function create(text){
+	  console.log('created text')
+	  var id = Date.now()
+	  _topics[id] = {
+	    id,
+	    count: 1,
+	    text
+	  }
+	  TopicWebAPIUtils.addTopic(_topics[id])
+	}
+	function updateCount(id, update){
+	  _topics[id]['count'] += update
+	  TopicWebAPIUtils.updateTopic(_topics[id])
+	}
+	function destroy(id){
+	  delete _topics[id]
+	}
+	function updateText(id, text){
+	  _topics[id].text = text
+	}
+
+
+
+
+	var Store = assign({}, EventEmitter.prototype, {
+	  init: function(rawTopics){
+	    _topics = _.chain(rawTopics)
+	               .map(function(topic){
+	                 topic.id = topic.id
+	                 return [topic.id, topic]
+	               })
+	               .object()
+	               .value()
+	  },
+	  getAll: function(){
+	    return _topics
+	  },
+	  getTopTopic: function(){
+	    var sum, topTopic, stat;
+
+	    sum = _.reduce(_topics, function(sum, topic){
+	      return sum + topic.count
+	    }, 0)
+
+	    topTopic = _.max(_topics, function(topic){
+	      return topic.count
+	    })
+	    stat = isNaN(topTopic.count/sum) ? 0 : topTopic.count/sum * 100;
+
+	    return assign({}, topTopic, {'stat': stat});
+	  },
+	  emitChange: function(){
+	    this.emit(CHANGE_EVENT)
+	  },
+	  addChangeListener: function(callback){
+	    this.on(CHANGE_EVENT, callback)
+	  },
+	  removeChangeListener: function(callback){
+	    this.removeListener(CHANGE_EVENT, callback)
+	  }
+	})
+
+
+	AppDispatcher.register(function(payload){
+	  var action = payload.action;
+	  var text
+
+	  switch(action.actionType){
+	    case Constants.TOPIC_CREATE:
+	      text = action.text.trim();
+	      if(text !== ''){
+	        create(text)
+	      }
+	      break;
+	    case Constants.TOPIC_INCREMENT:
+	      updateCount(action.id, 1);
+	      break;
+
+	    case Constants.TOPIC_DECREMENT:
+	      updateCount(action.id, -1)
+	      break;
+	    
+	    case Constants.TOPIC_DESTROY:
+	      destroy(action.id)
+	      break;
+
+	    case Constants.RECEIVE_RAW_TOPICS: 
+	      Store.init(action.data)
+	      break;
+
+	    case Constants.TODO_UPDATE_TEXT:
+	      updateText(action.id, action.text)
+	      break;
+
+	    default: 
+	      return true
+	  }
+
+	  Store.emitChange()
+	  return true
+	})
+
+	module.exports = Store
+
+
+
+/***/ }),
+/* 168 */
 /***/ (function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -26967,556 +27518,11 @@
 
 
 /***/ }),
-/* 160 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(163).Dispatcher;
-	var assign  = __webpack_require__(158);
-
-	// add a new method to Dispatcher,because there is a source to add .
-	var AppDispatcher = assign(new Dispatcher(), {
-	  handleViewAction: function(action){
-	    this.dispatch({
-	      source: 'VIEW_ACTION',
-	      action: action
-	    })
-	  },
-	  handleServerAction: function(action){
-	    this.dispatch({
-	      source: 'SERVER_ACTION',
-	      action
-	    })
-	  }
-	})
-
-	module.exports = AppDispatcher
-
-/***/ }),
-/* 161 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var keymirror = __webpack_require__(162);
-
-	module.exports = keymirror({
-	  TOPIC_CREATE: null,
-	  TODO_COMPLETE: null,
-	  TOPIC_INCREMENT: null,
-	  TOPIC_DECREMENT: null,
-	  TODO_UPDATE_TEXT: null,
-	  TOPIC_DESTROY: null,
-	  RECEIVE_RAW_TOPICS: null
-	})
-
-
-
-/***/ }),
-/* 162 */
-/***/ (function(module, exports) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 */
-
-	"use strict";
-
-	/**
-	 * Constructs an enumeration with keys equal to their value.
-	 *
-	 * For example:
-	 *
-	 *   var COLORS = keyMirror({blue: null, red: null});
-	 *   var myColor = COLORS.blue;
-	 *   var isColorValid = !!COLORS[myColor];
-	 *
-	 * The last line could not be performed if the values of the generated enum were
-	 * not equal to their keys.
-	 *
-	 *   Input:  {key1: val1, key2: val2}
-	 *   Output: {key1: key1, key2: key2}
-	 *
-	 * @param {object} obj
-	 * @return {object}
-	 */
-	var keyMirror = function(obj) {
-	  var ret = {};
-	  var key;
-	  if (!(obj instanceof Object && !Array.isArray(obj))) {
-	    throw new Error('keyMirror(...): Argument must be an object.');
-	  }
-	  for (key in obj) {
-	    if (!obj.hasOwnProperty(key)) {
-	      continue;
-	    }
-	    ret[key] = key;
-	  }
-	  return ret;
-	};
-
-	module.exports = keyMirror;
-
-
-/***/ }),
-/* 163 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	module.exports.Dispatcher = __webpack_require__(164);
-
-
-/***/ }),
-/* 164 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * 
-	 * @preventMunge
-	 */
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var invariant = __webpack_require__(165);
-
-	var _prefix = 'ID_';
-
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *         case 'city-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
-
-	var Dispatcher = (function () {
-	  function Dispatcher() {
-	    _classCallCheck(this, Dispatcher);
-
-	    this._callbacks = {};
-	    this._isDispatching = false;
-	    this._isHandled = {};
-	    this._isPending = {};
-	    this._lastID = 1;
-	  }
-
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   */
-
-	  Dispatcher.prototype.register = function register(callback) {
-	    var id = _prefix + this._lastID++;
-	    this._callbacks[id] = callback;
-	    return id;
-	  };
-
-	  /**
-	   * Removes a callback based on its token.
-	   */
-
-	  Dispatcher.prototype.unregister = function unregister(id) {
-	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	    delete this._callbacks[id];
-	  };
-
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   */
-
-	  Dispatcher.prototype.waitFor = function waitFor(ids) {
-	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this._isPending[id]) {
-	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-	        continue;
-	      }
-	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	      this._invokeCallback(id);
-	    }
-	  };
-
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   */
-
-	  Dispatcher.prototype.dispatch = function dispatch(payload) {
-	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-	    this._startDispatching(payload);
-	    try {
-	      for (var id in this._callbacks) {
-	        if (this._isPending[id]) {
-	          continue;
-	        }
-	        this._invokeCallback(id);
-	      }
-	    } finally {
-	      this._stopDispatching();
-	    }
-	  };
-
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   */
-
-	  Dispatcher.prototype.isDispatching = function isDispatching() {
-	    return this._isDispatching;
-	  };
-
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-	    this._isPending[id] = true;
-	    this._callbacks[id](this._pendingPayload);
-	    this._isHandled[id] = true;
-	  };
-
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-	    for (var id in this._callbacks) {
-	      this._isPending[id] = false;
-	      this._isHandled[id] = false;
-	    }
-	    this._pendingPayload = payload;
-	    this._isDispatching = true;
-	  };
-
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-
-	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-	    delete this._pendingPayload;
-	    this._isDispatching = false;
-	  };
-
-	  return Dispatcher;
-	})();
-
-	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ }),
-/* 165 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
-
-	"use strict";
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function (condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ }),
-/* 166 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1)
-	var ReactPropTypes = React.PropTypes
-	var Actions = __webpack_require__(150)
-	var TopicTextInput = __webpack_require__(151)
-	var cx = __webpack_require__(168)
-
-	var TopicItem = React.createClass({displayName: "TopicItem",
-	  propTypes: {
-	    topic: ReactPropTypes.object.isRequired
-	  },
-	  getInitialState: function(){
-	    return {
-	      isEditing: false
-	    }
-	  },
-	  render: function(){
-	    var topic = this.props.topic
-	    var input
-	    if(this.state.isEditing){
-	      input = 
-	      React.createElement(TopicTextInput, {
-	        className: "edit", 
-	        onSave: this._onSave, 
-	        value: topic.text}
-	       )
-	    }
-
-	    return (
-	      React.createElement("li", {className: cx({
-	        'editing': this.state.isEditing
-	      }), key: topic.id}, 
-	        React.createElement("div", {className: "view"}, 
-	          React.createElement("label", {onDoubleClick: this._onDoubleClick}, topic.text), 
-	          React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
-	          React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
-	          React.createElement("button", {className: "destroy", onClick: this._onDestroy}, String.fromCharCode(215))
-	        ), 
-	        input
-	      )
-	    )
-	  },
-	  _onDoubleClick: function(){
-	    this.setState({
-	      isEditing: true
-	    })
-	  },
-	  _onIncrement: function(){
-	    console.log(this.props.topic)
-	    Actions.increment(this.props.topic.id)
-	  },
-	  _onDecrement: function(){
-	    Actions.decrement(this.props.topic.id)
-	  },
-	  _onDestroy: function(){
-	    Actions.destroy(this.props.topic.id)
-	  },
-	  _onToggleComplete: function(){
-	    Actions.toggleComplete(this.props.topic)
-	  },
-	  _onSave: function(text){
-	    Actions.updateText(this.props.topic.id, text)
-	    this.setState({
-	      isEditing: false
-	    })
-	  }
-	})
-
-	module.exports = TopicItem
-
-/***/ }),
-/* 167 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1)
-
-	var TopicCountItem = React.createClass({displayName: "TopicCountItem",
-	  render: function(){
-	    return (
-	      React.createElement("li", {key: this.props.key}, 
-	        React.createElement("span", null, this.props.title), 
-	        React.createElement("span", {className: "count"}, this.props.count)
-	      )
-	    )
-	  }
-	})
-
-	module.exports = TopicCountItem
-
-/***/ }),
-/* 168 */
-/***/ (function(module, exports) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule cx
-	 */
-
-	/**
-	 * This function is used to mark string literals representing CSS class names
-	 * so that they can be transformed statically. This allows for modularization
-	 * and minification of CSS class names.
-	 *
-	 * In static_upstream, this function is actually implemented, but it should
-	 * eventually be replaced with something more descriptive, and the transform
-	 * that is used in the main stack should be ported for use elsewhere.
-	 *
-	 * @param string|object className to modularize, or an object of key/values.
-	 *                      In the object case, the values are conditions that
-	 *                      determine if the className keys should be included.
-	 * @param [string ...]  Variable list of classNames in the string case.
-	 * @return string       Renderable space-separated CSS className.
-	 */
-	function cx(classNames) {
-	  if (typeof classNames == 'object') {
-	    return Object.keys(classNames).filter(function(className) {
-	      return classNames[className];
-	    }).join(' ');
-	  } else {
-	    return Array.prototype.join.call(arguments, ' ');
-	  }
-	}
-
-	module.exports = cx;
-
-
-/***/ }),
 /* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var $ = __webpack_require__(171)
-	var ServerActions = __webpack_require__(170)
+	var $ = __webpack_require__(170)
+	var ServerActions = __webpack_require__(171)
 
 	var defaultConfig = {
 	  url: '/topics',
@@ -27530,7 +27536,7 @@
 	     .then(function(data, textStatus, jqXHR){
 	      ServerActions.receiveCreatedTopics(data)
 	     }, function(jqXHR, data, errorThrown){
-	       console.log(errorThrow)
+	       console.log(errorThrown)
 	     })
 	  },
 	  addTopic: function(topic){
@@ -27563,24 +27569,6 @@
 
 /***/ }),
 /* 170 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(160);
-	var Constants = __webpack_require__(161)
-
-	var ServerActions = {
-	  receiveCreatedTopics: function(data){
-	    AppDispatcher.handleServerAction({
-	      actionType: Constants.RECEIVE_RAW_TOPICS,
-	      data
-	    })
-	  }
-	}
-
-	module.exports = ServerActions
-
-/***/ }),
-/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -37398,6 +37386,24 @@
 	return jQuery;
 	}));
 
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(151);
+	var Constants = __webpack_require__(156)
+
+	var ServerActions = {
+	  receiveCreatedTopics: function(data){
+	    AppDispatcher.handleServerAction({
+	      actionType: Constants.RECEIVE_RAW_TOPICS,
+	      data
+	    })
+	  }
+	}
+
+	module.exports = ServerActions
 
 /***/ })
 /******/ ]);
