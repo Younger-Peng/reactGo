@@ -27420,7 +27420,7 @@
 	          React.createElement("label", {onDoubleClick: this._onDoubleClick}, topic.text), 
 	          React.createElement("button", {className: "increment", onClick: this._onIncrement}, "+"), 
 	          React.createElement("button", {className: "decrement", onClick: this._onDecrement}, "-"), 
-	          React.createElement("button", {className: "destroy", onClick: this._onDestroy}, "delete")
+	          React.createElement("button", {className: "destroy", onClick: this._onDestroy}, String.fromCharCode(215))
 	        ), 
 	        input
 	      )
