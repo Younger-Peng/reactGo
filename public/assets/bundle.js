@@ -46,6 +46,10 @@
 
 	var React = __webpack_require__(1)
 	var Application = __webpack_require__(148)
+	var TopicWebAPIUtils = __webpack_require__(169)
+
+	// Get all topic from server via Ajax call.This will create an action that will be dispatched to the store
+	TopicWebAPIUtils.getAllTopics()
 
 	React.render(
 	  React.createElement(Application, {message: "Welcome to planet Bumi"}),
@@ -27498,6 +27502,48 @@
 
 	module.exports = cx;
 
+
+/***/ }),
+/* 169 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"jquery\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()))
+	var ServerActions = __webpack_require__(170)
+
+	var defaultConfig = {
+	  url: '/topic',
+	  type: 'GET',
+	  dataType: 'json'
+	}
+
+	module.exports = {
+	  getAllTopics: function(){
+	    $.ajax(defaultConfig)
+	     .then(function(data, textStatus, jqXHR){
+	      ServerActions.receiveCreatedTopics(data)
+	     }, function(jqXHR, data, errorThrow){
+	       console.log(errorThrow)
+	     })
+	  }
+	}
+
+/***/ }),
+/* 170 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(160);
+	var Constants = __webpack_require__(161)
+
+	var ServerActions = {
+	  receiveCreatedTopics: function(data){
+	    AppDispatcher.handleServerAction({
+	      actionType: Constants.RECEIVE_RAW_TOPICS,
+	      data
+	    })
+	  }
+	}
+
+	module.exports = ServerActions
 
 /***/ })
 /******/ ]);
