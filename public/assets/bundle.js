@@ -19265,7 +19265,7 @@
 	    var allTopics = this.props.allTopics
 	    var topListItems = []
 	    _.forEach(allTopics, function(topic) {
-	      topListItems.push(React.createElement(TopicCountItem, {title: topic.text, count: topic.count}))
+	      topListItems.push(React.createElement(TopicCountItem, {key: topic.id, title: topic.text, count: topic.count}))
 	    })
 	    return (
 	      React.createElement("div", {id: "sideSection"}, 
@@ -27445,7 +27445,7 @@
 	var TopicCountItem = React.createClass({displayName: "TopicCountItem",
 	  render: function(){
 	    return (
-	      React.createElement("li", null, 
+	      React.createElement("li", {key: this.props.key}, 
 	        React.createElement("span", null, this.props.title), 
 	        React.createElement("span", null, this.props.count)
 	      )

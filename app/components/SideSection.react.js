@@ -12,7 +12,7 @@ var SideSection = React.createClass({
     var allTopics = this.props.allTopics
     var topListItems = []
     _.forEach(allTopics, function(topic) {
-      topListItems.push(<TopicCountItem title={topic.text} count={topic.count}/>)
+      topListItems.push(<TopicCountItem key={topic.id} title={topic.text} count={topic.count}/>)
     })
     return (
       <div id="sideSection">
